@@ -1,9 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-// Замер скорости скачивания: 10 последовательных запросов к одному адресу.
-// Без зависимостей, нужен Node.js 18+ (встроенный fetch).
-
 const REQUESTS = 10;
 const TIMEOUT_MS = 60_000;
 
@@ -26,10 +23,8 @@ function parseUrl(arg) {
   return url;
 }
 
-// Один запрос: ждём полного тела ответа и считаем байты.
 async function download(url) {
   const start = process.hrtime.bigint();
-  // cache: 'no-store' и заголовок Cache-Control — чтобы не мерить кэш.
   const res = await fetch(url, {
     cache: 'no-store',
     headers: { 'Cache-Control': 'no-cache' },
@@ -69,7 +64,6 @@ async function main() {
   if (totalBytes === 0) fail('Скачано 0 байт — скорость посчитать нельзя.');
 
   const avgMs = totalMs / REQUESTS;
-  // Общая скорость = весь объём / суммарное время запросов.
   const mbitPerSec = (totalBytes * 8) / (totalMs / 1000) / 1e6;
 
   console.log('\n--- Итого ---');
